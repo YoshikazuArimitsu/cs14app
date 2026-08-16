@@ -25,9 +25,9 @@ try
     {
         options.SwaggerDoc("v1", new OpenApiInfo
         {
-            Title = "CS14App API",
+            Title = "AKSCS14App API",
             Version = "v1",
-            Description = "C# 14 / .NET 10 で構築されたサンプル ASP.NET Core Web API"
+            Description = "Arimitsu ga Kangaeta Saikyo no C#14App API",
         });
     });
 
@@ -40,7 +40,7 @@ try
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "CS14App API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AKSCS14App API v1");
     });
 
     // DevContainer 等でルートにアクセスした際に Swagger UI を表示する。
@@ -55,7 +55,7 @@ try
 }
 catch (Exception ex) when (ex is not HostAbortedException)
 {
-    Log.Fatal(ex, "CS14App.Api がスタートアップ中に予期せず終了しました");
+    Log.Fatal(ex, "AKSCS14App.Api がスタートアップ中に予期せず終了しました");
 }
 finally
 {
