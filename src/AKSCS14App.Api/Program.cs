@@ -2,10 +2,14 @@ using CS14App.Api.Compliance;
 using CS14App.Api.Services;
 
 using Microsoft.Extensions.Compliance.Classification;
+using Microsoft.Extensions.Compliance.Redaction;
 using Microsoft.OpenApi;
 
 using Serilog;
 using Serilog.Extensions.Hosting;
+
+const string ConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj} {Properties:j}{NewLine}{Exception}";
+const string FileOutputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {SourceContext}: {Message:lj} {Properties:j}{NewLine}{Exception}";
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -17,17 +21,24 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // ロガー設定読み込み＆初期化
-    Log.Logger = new LoggerConfiguration()
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.FromLogContext()
-        .CreateLogger();
-    builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog(Log.Logger, dispose: true);
+    // .NETコンプライアンス有効化（電話番号用 Redactor の登録）
+    builder.Services.AddRedaction(options =>
+        options.SetRedactor<PhoneNumberRedactor>(new DataClassificationSet(AppTaxonomy.PhoneNumber)));
 
-    builder.Services.AddSingleton(Log.Logger);
-    builder.Services.AddSingleton<DiagnosticContext>();
-    builder.Services.AddSingleton<IDiagnosticContext>(sp => sp.GetRequiredService<DiagnosticContext>());
+    // ロガー設定読み込み＆初期化
+    // コンソール出力にはコンプライアンスマスクを適用し、ファイル出力には原文のまま出力する。
+    builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
+        .ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Logger(lc => lc
+            .Enrich.With(new ClassifiedLogPropertyMaskingEnricher(services.GetRequiredService<IRedactorProvider>()))
+            .WriteTo.Console(outputTemplate: ConsoleOutputTemplate))
+        .WriteTo.Logger(lc => lc
+            .WriteTo.File(
+                "logs/cs14app-.log",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 14,
+                outputTemplate: FileOutputTemplate)));
 
     // Init swagger
     builder.Services.AddControllers();
@@ -43,11 +54,6 @@ try
     });
 
     builder.Services.AddSingleton<IGreetingService, GreetingService>();
-
-    // .NETコンプライアンス有効化
-    builder.Services.AddRedaction(options =>
-        options.SetRedactor<PhoneNumberRedactor>(new DataClassificationSet(AppTaxonomy.PhoneNumber)));
-    builder.Logging.EnableRedaction(options => options.ApplyDiscriminator = false);
 
     var app = builder.Build();
 
