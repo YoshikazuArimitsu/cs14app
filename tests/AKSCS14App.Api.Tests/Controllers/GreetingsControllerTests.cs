@@ -1,4 +1,7 @@
 using System.Net;
+using System.Net.Http.Json;
+
+using CS14App.Api.Models;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -15,9 +18,9 @@ public class GreetingsControllerTests
     }
 
     [Fact]
-    public async Task Get_WithValidName_ReturnsOkWithGreeting()
+    public async Task Post_WithValidUser_ReturnsOkWithGreeting()
     {
-        var response = await _client.GetAsync("/api/greetings/Taro");
+        var response = await _client.PostAsJsonAsync("/api/greetings", new UserModel { Name = "Taro", PhoneNumber = "09012345678" });
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await response.Content.ReadAsStringAsync();
@@ -25,9 +28,17 @@ public class GreetingsControllerTests
     }
 
     [Fact]
-    public async Task Get_WithWhitespaceName_ReturnsBadRequest()
+    public async Task Post_WithWhitespaceName_ReturnsBadRequest()
     {
-        var response = await _client.GetAsync("/api/greetings/%20");
+        var response = await _client.PostAsJsonAsync("/api/greetings", new UserModel { Name = " ", PhoneNumber = "09012345678" });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_WithMissingPhoneNumber_ReturnsBadRequest()
+    {
+        var response = await _client.PostAsJsonAsync("/api/greetings", new UserModel { Name = "Taro", PhoneNumber = "" });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }

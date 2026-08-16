@@ -1,3 +1,4 @@
+using CS14App.Api.Models;
 using CS14App.Api.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ namespace CS14App.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GreetingsController : ControllerBase
+public partial class GreetingsController : ControllerBase
 {
     private readonly IGreetingService _greetingService;
     private readonly ILogger<GreetingsController> _logger;
@@ -17,16 +18,14 @@ public class GreetingsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{name}")]
-    public ActionResult<string> Get(string name)
+    [HttpPost]
+    public ActionResult<string> Post(UserModel user)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return BadRequest("name is required.");
-        }
+        LogGreetingRequested(_logger, user);
 
-        _logger.LogInformation("Greeting requested for {Name}", name);
-
-        return Ok(_greetingService.Greet(name));
+        return Ok(_greetingService.Greet(user.Name));
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Greeting requested")]
+    private static partial void LogGreetingRequested(ILogger logger, [LogProperties] UserModel user);
 }

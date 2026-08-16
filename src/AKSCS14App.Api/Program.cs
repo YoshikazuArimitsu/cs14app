@@ -1,8 +1,11 @@
+using CS14App.Api.Compliance;
 using CS14App.Api.Services;
 
+using Microsoft.Extensions.Compliance.Classification;
 using Microsoft.OpenApi;
 
 using Serilog;
+using Serilog.Extensions.Hosting;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -14,14 +17,20 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // ロガー: appsettings.json の "Serilog" セクションで出力先(Console/File など)を変更できる。
-    builder.Host.UseSerilog((context, services, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext());
+    // ロガー設定読み込み＆初期化
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .CreateLogger();
+    builder.Logging.ClearProviders();
+    builder.Logging.AddSerilog(Log.Logger, dispose: true);
 
+    builder.Services.AddSingleton(Log.Logger);
+    builder.Services.AddSingleton<DiagnosticContext>();
+    builder.Services.AddSingleton<IDiagnosticContext>(sp => sp.GetRequiredService<DiagnosticContext>());
+
+    // Init swagger
     builder.Services.AddControllers();
-
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
@@ -34,6 +43,11 @@ try
     });
 
     builder.Services.AddSingleton<IGreetingService, GreetingService>();
+
+    // .NETコンプライアンス有効化
+    builder.Services.AddRedaction(options =>
+        options.SetRedactor<PhoneNumberRedactor>(new DataClassificationSet(AppTaxonomy.PhoneNumber)));
+    builder.Logging.EnableRedaction(options => options.ApplyDiscriminator = false);
 
     var app = builder.Build();
 
