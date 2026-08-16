@@ -15,7 +15,7 @@
     }
   },
 
-  "postCreateCommand": "dotnet restore AKSCS14App.slnx && dotnet dev-certs https",
+  "postCreateCommand": "dotnet restore AKSCS14App.slnx && dotnet dev-certs https && dotnet tool restore && dotnet husky install",
 
   "customizations": {
     "vscode": {
