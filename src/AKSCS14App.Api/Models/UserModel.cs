@@ -10,7 +10,6 @@ public class UserModel
     public string Name { get; set; } = string.Empty;
 
     [Required]
-    [Phone]
     [PhoneNumberData]
     public string PhoneNumber { get; set; } = string.Empty;
 }
