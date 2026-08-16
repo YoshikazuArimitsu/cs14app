@@ -1,5 +1,7 @@
 using CS14App.Api.Services;
+
 using Microsoft.OpenApi;
+
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
