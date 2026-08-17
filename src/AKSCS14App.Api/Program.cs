@@ -21,6 +21,8 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.AddServiceDefaults();
+
     // .NETコンプライアンス有効化（電話番号用 Redactor の登録）
     builder.Services.AddRedaction(options =>
         options.SetRedactor<PhoneNumberRedactor>(new DataClassificationSet(AppTaxonomy.PhoneNumber)));
@@ -72,6 +74,7 @@ try
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapDefaultEndpoints();
 
     app.Run();
 }
