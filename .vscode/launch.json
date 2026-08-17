@@ -18,6 +18,12 @@
         "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
         "uriFormat": "%s/swagger"
       }
+    },
+    {
+      "name": "C#: AKSCS14App.AppHost を起動(Aspireダッシュボード)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/src/AKSCS14App.AppHost/AKSCS14App.AppHost.csproj"
     }
   ]
 }

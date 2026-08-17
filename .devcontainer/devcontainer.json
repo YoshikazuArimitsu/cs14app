@@ -7,11 +7,39 @@
     "ASPNETCORE_URLS": "http://localhost:5080"
   },
 
-  "forwardPorts": [5080],
+  "forwardPorts": [5080, 7080, 15281, 19281, 15280, 17280, 21280, 22280],
   "portsAttributes": {
     "5080": {
-      "label": "AKSCS14App.Api (Swagger)",
+      "label": "AKSCS14App.Api (HTTP/Swagger)",
+      "onAutoForward": "silent"
+    },
+    "7080": {
+      "label": "AKSCS14App.Api (HTTPS/Swagger)",
+      "onAutoForward": "silent"
+    },
+    "15281": {
+      "label": "Aspire Dashboard (HTTP, devcontainer既定)",
       "onAutoForward": "openBrowser"
+    },
+    "19281": {
+      "label": "Aspire OTLP Endpoint (HTTP, devcontainer既定)",
+      "onAutoForward": "silent"
+    },
+    "15280": {
+      "label": "Aspire Dashboard (HTTPS profile / HTTP側)",
+      "onAutoForward": "silent"
+    },
+    "17280": {
+      "label": "Aspire Dashboard (HTTPS profile / HTTPS側、要証明書信頼)",
+      "onAutoForward": "silent"
+    },
+    "21280": {
+      "label": "Aspire OTLP Endpoint (HTTPS profile、要証明書信頼)",
+      "onAutoForward": "silent"
+    },
+    "22280": {
+      "label": "Aspire Resource Service Endpoint (HTTPS profile、要証明書信頼)",
+      "onAutoForward": "silent"
     }
   },
 
