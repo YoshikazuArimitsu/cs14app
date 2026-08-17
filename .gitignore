@@ -19,3 +19,6 @@ TestResults/
 coverage*.json
 coverage*.xml
 coverage*.info
+
+## Demo Sqlite
+src/AKSCS14App.AppHost/data/

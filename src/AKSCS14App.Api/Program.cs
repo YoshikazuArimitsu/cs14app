@@ -1,6 +1,8 @@
 using CS14App.Api.Compliance;
+using CS14App.Api.Data;
 using CS14App.Api.Services;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Compliance.Classification;
 using Microsoft.Extensions.Compliance.Redaction;
 using Microsoft.OpenApi;
@@ -22,6 +24,9 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.AddServiceDefaults();
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("sqlitedb")));
 
     // .NETコンプライアンス有効化（電話番号用 Redactor の登録）
     builder.Services.AddRedaction(options =>
