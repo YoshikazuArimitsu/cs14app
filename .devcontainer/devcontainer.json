@@ -7,11 +7,31 @@
     "ASPNETCORE_URLS": "http://localhost:5080"
   },
 
-  "forwardPorts": [5080],
+  "forwardPorts": [5080, 7080, 15280, 17280, 21280, 22280],
   "portsAttributes": {
     "5080": {
-      "label": "AKSCS14App.Api (Swagger)",
+      "label": "AKSCS14App.Api (HTTP/Swagger)",
       "onAutoForward": "openBrowser"
+    },
+    "7080": {
+      "label": "AKSCS14App.Api (HTTPS/Swagger)",
+      "onAutoForward": "silent"
+    },
+    "15280": {
+      "label": "Aspire Dashboard (HTTP)",
+      "onAutoForward": "silent"
+    },
+    "17280": {
+      "label": "Aspire Dashboard (HTTPS)",
+      "onAutoForward": "openBrowser"
+    },
+    "21280": {
+      "label": "Aspire OTLP Endpoint",
+      "onAutoForward": "silent"
+    },
+    "22280": {
+      "label": "Aspire Resource Service Endpoint",
+      "onAutoForward": "silent"
     }
   },
 
