@@ -28,6 +28,8 @@ try
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("sqlitedb")));
 
+    builder.AddRedisClient("redis");
+
     // .NETコンプライアンス有効化（電話番号用 Redactor の登録）
     builder.Services.AddRedaction(options =>
         options.SetRedactor<PhoneNumberRedactor>(new DataClassificationSet(AppTaxonomy.PhoneNumber)));
