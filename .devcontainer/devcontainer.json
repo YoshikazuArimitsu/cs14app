@@ -4,7 +4,11 @@
 
   "containerEnv": {
     "ASPNETCORE_ENVIRONMENT": "Development",
-    "ASPNETCORE_URLS": "http://localhost:5080"
+    "ASPNETCORE_URLS": "http://localhost:5080",
+
+    // ローカル内接続はProxyを通さない
+    "NO_PROXY": "localhost,127.0.0.1,::1,172.16.0.0/12,192.168.0.0/16",
+    "no_proxy": "localhost,127.0.0.1,::1,172.16.0.0/12,192.168.0.0/16"    
   },
 
   "forwardPorts": [5080, 7080, 15281, 19281, 15280, 17280, 21280, 22280],
