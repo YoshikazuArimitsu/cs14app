@@ -34,6 +34,8 @@ try
 
     // ロガー設定読み込み＆初期化
     // コンソール出力にはコンプライアンスマスクを適用し、ファイル出力には原文のまま出力する。
+    // writeToProviders: true により、AddServiceDefaults() (ConfigureOpenTelemetry) で登録された
+    // OpenTelemetry の ILoggerProvider にもログイベントを転送し、構造化ログとして OTLP エクスポートさせる。
     builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfiguration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
@@ -45,7 +47,8 @@ try
                 "logs/cs14app-.log",
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 14,
-                outputTemplate: FileOutputTemplate)));
+                outputTemplate: FileOutputTemplate)),
+        writeToProviders: true);
 
     // Init swagger
     builder.Services.AddControllers();
