@@ -2,6 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "C#: AKSCS14App.AppHost を起動(Aspireダッシュボード)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/src/AKSCS14App.AppHost/AKSCS14App.AppHost.csproj"
+    },
+    {
       "name": "C#: AKSCS14App.Api を起動(Swaggerを自動で開く)",
       "type": "coreclr",
       "request": "launch",
@@ -18,12 +24,6 @@
         "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
         "uriFormat": "%s/swagger"
       }
-    },
-    {
-      "name": "C#: AKSCS14App.AppHost を起動(Aspireダッシュボード)",
-      "type": "dotnet",
-      "request": "launch",
-      "projectPath": "${workspaceFolder}/src/AKSCS14App.AppHost/AKSCS14App.AppHost.csproj"
     }
   ]
 }
